@@ -34,14 +34,14 @@ public class AprilTagsVision {
         visionPortal.setActiveCamera(camera);
     }
 
-    private double[] getAprilTagDistance() {
+    public double[] getAprilTagDistance() {
         double[] position = new double[3];
 
         List<AprilTagDetection> currentDetections = aprilTagsProcessor.getDetections();
         for (AprilTagDetection detection : currentDetections) {
             if (detection.metadata != null) {
                 position[0] = detection.ftcPose.x;
-                position[1] = detection.ftcPose.y;
+                position[1] = detection.ftcPose.y; // Finds the distance from the camera outwards to the april tag
                 position[2] = detection.ftcPose.z;
             }
         }

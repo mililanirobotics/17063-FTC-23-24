@@ -1,21 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.List;
 import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
 
-public class VisionTracking {
+public class TensorFlowVisionSubsystem {
 
     private WebcamName camera;
     private TfodProcessor tfodProcessor;
@@ -26,7 +21,7 @@ public class VisionTracking {
     };
 
 
-    public VisionTracking(LinearOpMode linearOpMode, Telemetry telemetry) {
+    public TensorFlowVisionSubsystem(LinearOpMode linearOpMode, Telemetry telemetry) {
         camera = linearOpMode.hardwareMap.get(WebcamName.class, "camera");
 
         tfodProcessor = new TfodProcessor.Builder() // Chain formatting for Tensorflow builder

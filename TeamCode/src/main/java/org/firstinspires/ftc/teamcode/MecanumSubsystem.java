@@ -20,12 +20,12 @@ public class MecanumSubsystem {
 
     private boolean slowModeOn;
 
-    public MecanumSubsystem(OpMode opMode, Telemetry telemetry) {
+    public MecanumSubsystem(HardwareMap hwMap, Telemetry telemetry) {
         //Initializing Motors
-        leftFrontDrive = opMode.hardwareMap.get(DcMotorEx.class, "leftFrontDrive");
-        rightFrontDrive = opMode.hardwareMap.get(DcMotorEx.class, "rightFrontDrive");
-        leftBackDrive = opMode.hardwareMap.get(DcMotorEx.class, "leftBackDrive");
-        rightBackDrive = opMode.hardwareMap.get(DcMotorEx.class, "rightBackDrive");
+        leftFrontDrive = hwMap.get(DcMotorEx.class, "leftFrontDrive");
+        rightFrontDrive = hwMap.get(DcMotorEx.class, "rightFrontDrive");
+        leftBackDrive = hwMap.get(DcMotorEx.class, "leftBackDrive");
+        rightBackDrive = hwMap.get(DcMotorEx.class, "rightBackDrive");
 
         leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -37,7 +37,7 @@ public class MecanumSubsystem {
         rightFrontDrive.setDirection(Constants.MecanumConstants.kRightFrontDirection);
         rightBackDrive.setDirection(Constants.MecanumConstants.kRightBackDirection);
 
-        imu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
+        imu = hwMap.get(BNO055IMU.class, "imu");
         parameters = new BNO055IMU.Parameters();
         imu.initialize(parameters);
 
@@ -71,6 +71,14 @@ public class MecanumSubsystem {
             rightBackDrive.setPower((y + x - rx) / denominator);
         }
     }
+
+    public void autoDrivePower (double power) {
+        leftFrontDrive.setPower(power);
+        rightFrontDrive.setPower(power);
+        leftBackDrive.setPower(power);
+        rightBackDrive.setPower(power);
+    }
+
     public void shutdown() {
         leftFrontDrive.setPower(0);
         rightFrontDrive.setPower(0);

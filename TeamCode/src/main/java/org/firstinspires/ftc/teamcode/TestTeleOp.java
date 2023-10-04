@@ -17,10 +17,9 @@ public class TestTeleOp extends OpMode
      * Code to run ONCE when the driver hits INIT
      */
     public void init() {
-        mecanumSubsystem = new MecanumSubsystem(this, telemetry);
+        mecanumSubsystem = new MecanumSubsystem(this.hardwareMap, telemetry);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
     }
 
     /*
