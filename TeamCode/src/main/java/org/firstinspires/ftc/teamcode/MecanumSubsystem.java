@@ -72,11 +72,32 @@ public class MecanumSubsystem {
         }
     }
 
-    public void autoDrivePower (double power) {
-        leftFrontDrive.setPower(power);
-        rightFrontDrive.setPower(power);
-        leftBackDrive.setPower(power);
-        rightBackDrive.setPower(power);
+    public void autoDrivePower (double power, String direction) {
+
+        if (direction.equals("Forwards")) {
+            leftFrontDrive.setPower(power);
+            rightFrontDrive.setPower(power);
+            leftBackDrive.setPower(power);
+            rightBackDrive.setPower(power);
+        }
+        else if (direction.equals("Backwards")) {
+            leftFrontDrive.setPower(-power);
+            rightFrontDrive.setPower(-power);
+            leftBackDrive.setPower(-power);
+            rightBackDrive.setPower(-power);
+        }
+        else if (direction.equals("Left")) {
+            leftFrontDrive.setPower(-power);
+            rightFrontDrive.setPower(power);
+            leftBackDrive.setPower(power);
+            rightBackDrive.setPower(-power);
+        }
+        else if (direction.equals("Right")) {
+            leftFrontDrive.setPower(power);
+            rightFrontDrive.setPower(-power);
+            leftBackDrive.setPower(-power);
+            rightBackDrive.setPower(power);
+        }
     }
 
     public void shutdown() {

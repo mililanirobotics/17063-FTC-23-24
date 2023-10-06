@@ -16,10 +16,13 @@ import java.util.List;
 public class AprilTagsVision {
     private AprilTagProcessor aprilTagsProcessor;
     private VisionPortal visionPortal;
+    List<AprilTagDetection> currentDetections;
     private WebcamName camera;
+    private int desiredID;
 
-    public AprilTagsVision (LinearOpMode linearOpMode, Telemetry telemetry) {
+    public AprilTagsVision (LinearOpMode linearOpMode, Telemetry telemetry, int ID) {
         camera = linearOpMode.hardwareMap.get(WebcamName.class, "camera");
+        desiredID = ID;
         aprilTagsProcessor = new AprilTagProcessor.Builder()
                 .setDrawAxes(true)
                 .setDrawCubeProjection(true)
@@ -34,17 +37,27 @@ public class AprilTagsVision {
         visionPortal.setActiveCamera(camera);
     }
 
+    public AprilTagDetection getAprilTag () {
+        for (AprilTagDetection detection : currentDetections) {
+            if (detection.id == desiredID) {
+                return detection;
+            }
+        }
+        return null;
+    }
+
+    public void updateDetections () {
+        currentDetections = aprilTagsProcessor.getDetections();
+    }
+
     public double[] getAprilTagDistance() {
         double[] position = new double[3];
-
-        List<AprilTagDetection> currentDetections = aprilTagsProcessor.getDetections();
-        for (AprilTagDetection detection : currentDetections) {
+        AprilTagDetection detection = getAprilTag();
             if (detection.metadata != null) {
                 position[0] = detection.ftcPose.x;
                 position[1] = detection.ftcPose.y; // Finds the distance from the camera outwards to the april tag
                 position[2] = detection.ftcPose.z;
             }
-        }
         return position;
     }
 

@@ -25,5 +25,9 @@ public class Constants {
 
     public static class AprilTagsConstants {
         public static final AprilTagGameDatabase kAprilTagsItems = new AprilTagGameDatabase();
+
+        public static final double kAprilTagP = 0.4;
+        public static final double kAprilTagMin = 0.2;
+        public static final double kAprilTagMax = 0.6;
     }
 }
