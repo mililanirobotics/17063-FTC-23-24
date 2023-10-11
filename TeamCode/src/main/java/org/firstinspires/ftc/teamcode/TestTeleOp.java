@@ -2,7 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+import org.firstinspires.ftc.teamcode.commands.CascadeLiftCommand;
+import org.firstinspires.ftc.teamcode.subsystems.CascadeLiftSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.MecanumSubsystem;
 
 //import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -12,12 +15,19 @@ public class TestTeleOp extends OpMode
 {
     // Declare OpMode members.
     private MecanumSubsystem mecanumSubsystem;
+    private CascadeLiftSubsystem cascadeLiftSubsystem;
+
+    private CascadeLiftCommand liftOperate;
 
     /*
      * Code to run ONCE when the driver hits INIT
      */
     public void init() {
         mecanumSubsystem = new MecanumSubsystem(this.hardwareMap, telemetry);
+        cascadeLiftSubsystem = new CascadeLiftSubsystem(this.hardwareMap);
+
+        liftOperate = new CascadeLiftCommand(cascadeLiftSubsystem, gamepad2);
+
         telemetry.addData("Status", "Initialized");
         telemetry.update();
     }
@@ -27,6 +37,7 @@ public class TestTeleOp extends OpMode
      */
     public void loop() {
         mecanumSubsystem.operate(gamepad1);
+        liftOperate.cascadePower();
     }
 
     /*

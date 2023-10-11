@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -13,14 +13,14 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 import java.util.List;
 
-public class AprilTagsVision {
+public class AprilTagsVisionSubsystem {
     private AprilTagProcessor aprilTagsProcessor;
     private VisionPortal visionPortal;
     List<AprilTagDetection> currentDetections;
     private WebcamName camera;
     private int desiredID;
 
-    public AprilTagsVision (LinearOpMode linearOpMode, Telemetry telemetry, int ID) {
+    public AprilTagsVisionSubsystem(LinearOpMode linearOpMode, Telemetry telemetry, int ID) {
         camera = linearOpMode.hardwareMap.get(WebcamName.class, "camera");
         desiredID = ID;
         aprilTagsProcessor = new AprilTagProcessor.Builder()

@@ -1,4 +1,6 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.subsystems;
+
+import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -34,6 +36,9 @@ public class TensorFlowVisionSubsystem {
                 .build();// Create a TFOD Processor by calling build()
 
         visionPortal = new VisionPortal.Builder()
+                .setCameraResolution(new Size(640, 480))
+                .enableLiveView(true)
+                .addProcessor(tfodProcessor)
                 .build();
     }
 
@@ -60,8 +65,8 @@ public class TensorFlowVisionSubsystem {
         double[] teamPropDimensions = new double[2];
         List<Recognition> currentRecognitions = tfodProcessor.getRecognitions();
         for (Recognition recognition : currentRecognitions) {
-            teamPropDimensions[0] = (recognition.getLeft() + recognition.getRight()) / 2;
-            teamPropDimensions[1] = (recognition.getTop() + recognition.getBottom()) / 2;
+            teamPropDimensions[0] = (recognition.getLeft() + recognition.getRight()) / 2; // Gets Length Dimensions
+            teamPropDimensions[1] = (recognition.getTop() + recognition.getBottom()) / 2; // Gets Width Dimensions
         }
 
         return teamPropDimensions;
