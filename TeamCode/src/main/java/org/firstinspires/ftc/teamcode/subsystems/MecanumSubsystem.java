@@ -46,6 +46,12 @@ public class MecanumSubsystem {
         telemetry.update();
     }
 
+    public double encoderReading () {
+        double encoderReading = leftFrontDrive.getCurrentPosition() * Constants.EncoderDriveConstants.kCOUNTS_PER_INCH;
+
+        return encoderReading;
+    }
+
     public void operate(Gamepad gamepad) {
         double y = -gamepad.left_stick_y;
         double x = gamepad.left_stick_x;
@@ -74,6 +80,10 @@ public class MecanumSubsystem {
     }
 
     public void autoDrivePower (double power, String direction) {
+        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         if (direction.equals("Forwards")) {
             leftFrontDrive.setPower(power);

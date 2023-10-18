@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -13,26 +14,21 @@ public class CascadeLiftSubsystem {
     private DcMotor leftLiftMotor;
     private DcMotor rightLiftMotor;
 
-    boolean leftBumper;
-    boolean rightBumper;
-
     public CascadeLiftSubsystem(HardwareMap hwMap) {
         leftLiftMotor = hwMap.get(DcMotor.class, "leftLiftMotor");
         rightLiftMotor = hwMap.get(DcMotor.class, "rightLiftMotor");
 
-        leftBumper = false;
-        rightBumper = false;
+        leftLiftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightLiftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void operate (Gamepad gamepad, double liftUpPower, double liftDownPower) {
-        leftBumper = gamepad.left_bumper;
-        rightBumper = gamepad.right_bumper;
 
-        if (leftBumper) {
+        if (gamepad.left_bumper) {
             leftLiftMotor.setPower(liftUpPower);
             rightLiftMotor.setPower(liftUpPower);
         }
-        else if (rightBumper) {
+        else if (gamepad.right_bumper) {
             leftLiftMotor.setPower(-liftDownPower);
             rightLiftMotor.setPower(-liftDownPower);
         }
@@ -59,7 +55,6 @@ public class CascadeLiftSubsystem {
 
         leftLiftMotor.setPower(speed);
         rightLiftMotor.setPower(speed);
-
         leftLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 

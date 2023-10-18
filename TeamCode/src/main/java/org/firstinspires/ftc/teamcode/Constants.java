@@ -23,6 +23,19 @@ public class Constants {
         public static final DcMotorSimple.Direction kRightBackDirection = DcMotorSimple.Direction.FORWARD;
     }
 
+    public static class EncoderDriveConstants {
+        public static final double kPULSES_PER_ROTATION = 28;
+        public static final double kCOUNTS_PER_ROTATION = kPULSES_PER_ROTATION * 4;
+        public static final double kDRIVE_GEAR_REDUCTION = 19.2;
+        public static final double kWHEEL_DIAMETER = 3.77953;
+        public static final double kWHEEL_CIRCUMFERENCE = Math.PI * kWHEEL_DIAMETER;
+        public static final double kCOUNTS_PER_INCH = (kCOUNTS_PER_ROTATION * kDRIVE_GEAR_REDUCTION) / kWHEEL_CIRCUMFERENCE;
+
+        public static final double kEncoderDriveP = 0.2;
+        public static final double kEncoderDriveMin = 0.2;
+        public static final double kEncoderDriveMax = 0.5;
+    }
+
     public static class AprilTagsConstants {
         public static final AprilTagGameDatabase kAprilTagsItems = new AprilTagGameDatabase();
 
@@ -48,7 +61,9 @@ public class Constants {
         public static final double kCOUNTS_PER_ROTATION = 28; // Conversion factor for encouder counts per motor rotation
         public static final double kDRIVE_GEAR_REDUCTION = 0; // The Gear Ratio needed for the lift motor, needs to change
         public static final double kCOUNTS_PER_INCH = kCOUNTS_PER_ROTATION * kDRIVE_GEAR_REDUCTION;
+    }
 
-
+    public static class RollerIntakeConstants {
+        public static final double kDeadband = 0.3;
     }
 }

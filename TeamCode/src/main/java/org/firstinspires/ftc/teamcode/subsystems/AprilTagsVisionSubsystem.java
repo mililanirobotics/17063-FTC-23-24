@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -18,11 +19,9 @@ public class AprilTagsVisionSubsystem {
     private VisionPortal visionPortal;
     List<AprilTagDetection> currentDetections;
     private WebcamName camera;
-    private int desiredID;
 
-    public AprilTagsVisionSubsystem(LinearOpMode linearOpMode, Telemetry telemetry, int ID) {
-        camera = linearOpMode.hardwareMap.get(WebcamName.class, "camera");
-        desiredID = ID;
+    public AprilTagsVisionSubsystem(HardwareMap hwMap, Telemetry telemetry) {
+        camera = hwMap.get(WebcamName.class, "camera");
         aprilTagsProcessor = new AprilTagProcessor.Builder()
                 .setDrawAxes(true)
                 .setDrawCubeProjection(true)
@@ -37,7 +36,8 @@ public class AprilTagsVisionSubsystem {
         visionPortal.setActiveCamera(camera);
     }
 
-    public AprilTagDetection getAprilTag () {
+    public AprilTagDetection getAprilTag (int ID) {
+        int desiredID = ID;
         for (AprilTagDetection detection : currentDetections) {
             if (detection.id == desiredID) {
                 return detection;
@@ -50,9 +50,11 @@ public class AprilTagsVisionSubsystem {
         currentDetections = aprilTagsProcessor.getDetections();
     }
 
-    public double[] getAprilTagDistance() {
+    public double[] getAprilTagDistance(int ID) {
+        int desiredID = ID;
+
         double[] position = new double[3];
-        AprilTagDetection detection = getAprilTag();
+        AprilTagDetection detection = getAprilTag(desiredID);
             if (detection.metadata != null) {
                 position[0] = detection.ftcPose.x;
                 position[1] = detection.ftcPose.y; // Finds the distance from the camera outwards to the april tag

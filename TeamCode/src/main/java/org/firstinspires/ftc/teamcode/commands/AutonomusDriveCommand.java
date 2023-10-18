@@ -12,17 +12,19 @@ public class AutonomusDriveCommand {
     private TensorFlowVisionSubsystem tensorFlowVision;
     private AprilTagsVisionSubsystem aprilTagsVision;
     private PIDController autoPID;
+    private int desiredID;
 
-    public AutonomusDriveCommand(MecanumSubsystem mecanumSubsystem, TensorFlowVisionSubsystem tensorFlowVisionvision, AprilTagsVisionSubsystem aprilTagsVision) {
+    public AutonomusDriveCommand(MecanumSubsystem mecanumSubsystem, TensorFlowVisionSubsystem tensorFlowVisionvision, AprilTagsVisionSubsystem aprilTagsVision, int ID) {
         m_MecanumSubsystem = mecanumSubsystem;
         this.tensorFlowVision = tensorFlowVisionvision;
         this.aprilTagsVision = aprilTagsVision;
         autoPID = new PIDController(Constants.AprilTagsConstants.kAprilTagP);
+        desiredID = ID;
     }
 
     // Alignment for camera to be in front
     public void aprilTagAlignment() {
-        double[] aprilTagPositions = aprilTagsVision.getAprilTagDistance();
+        double[] aprilTagPositions = aprilTagsVision.getAprilTagDistance(desiredID);
         double powerOutput = autoPID.PIDOutput(aprilTagPositions[0], 0, Constants.AprilTagsConstants.kAprilTagMin, Constants.AprilTagsConstants.kAprilTagMax);
 
         if (aprilTagPositions[0] > 1) {
@@ -38,7 +40,7 @@ public class AutonomusDriveCommand {
 
     // Input targetDistance as the maximum distance of the camera from the apriltag
     public void aprilTagMovement () {
-        double[] aprilTagsPositions = aprilTagsVision.getAprilTagDistance();
+        double[] aprilTagsPositions = aprilTagsVision.getAprilTagDistance(desiredID);
         double powerOutput = autoPID.PIDOutput(aprilTagsPositions[1], Constants.AprilTagsConstants.kAprilTagTargetDistance, Constants.AprilTagsConstants.kAprilTagMin, Constants.AprilTagsConstants.kAprilTagMax);
 
 
