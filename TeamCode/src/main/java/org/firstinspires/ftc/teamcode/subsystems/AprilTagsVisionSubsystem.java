@@ -26,21 +26,28 @@ public class AprilTagsVisionSubsystem {
                 .setDrawAxes(true)
                 .setDrawCubeProjection(true)
                 .setDrawTagOutline(true)
+                .setDrawTagID(true)
                 .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
                 .setTagLibrary(Constants.AprilTagsConstants.kAprilTagsItems.getCenterStageTagLibrary())
                 .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
                 .build();
         visionPortal = new VisionPortal.Builder()
+                .setCamera(camera)
+                .addProcessor(aprilTagsProcessor)
+                .setStreamFormat(VisionPortal.StreamFormat.YUY2)
                 .build();
 
-        visionPortal.setActiveCamera(camera);
     }
 
     public AprilTagDetection getAprilTag (int ID) {
+        updateDetections();
         int desiredID = ID;
+        AprilTagDetection aprilTag;
+        // Method should return the detection of our desired AprilTag ID.
         for (AprilTagDetection detection : currentDetections) {
             if (detection.id == desiredID) {
-                return detection;
+                aprilTag = detection;
+                return aprilTag;
             }
         }
         return null;
@@ -63,27 +70,22 @@ public class AprilTagsVisionSubsystem {
         return position;
     }
 
-    // double[] god = getAprilTagDistance();
-    // god[0]
-
-    private void telemetryAprilTag(Telemetry telemetry) {
-
-        List<AprilTagDetection> currentDetections = aprilTagsProcessor.getDetections();
+    // Due to lack of accessibility for the detection of April Tags through other methods, this method may be deprecated and integrated elsewhere in the getAprilTagDistance method
+    public void telemetryAprilTag(int ID, Telemetry telemetry) {
         telemetry.addData("# AprilTags Detected", currentDetections.size());
+        AprilTagDetection detection = getAprilTag(ID);
 
-        // Step through the list of detections and display info for each one.
-        for (AprilTagDetection detection : currentDetections) {
-            if (detection.metadata != null) {
-                telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
-                telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
-            } else {
-                telemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
-                telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
-            }
-        }   // end for() loop
-
-        // Add "key" information to telemetry
+        if (detection != null) {
+            telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id));
+            telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
+        } else {
+            telemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
+            telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
+        }
+    // Add "key" information to telemetry
         telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
-    }   // end method telemetryAprilTag()
-
+        telemetry.update();
+    }
+        // double[] god = getAprilTagDistance();
+    // god[0]
 }

@@ -36,6 +36,7 @@ public class TensorFlowVisionSubsystem {
                 .build();// Create a TFOD Processor by calling build()
 
         visionPortal = new VisionPortal.Builder()
+                .setCamera(camera)
                 .setCameraResolution(new Size(640, 480))
                 .enableLiveView(true)
                 .addProcessor(tfodProcessor)
