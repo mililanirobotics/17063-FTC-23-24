@@ -11,6 +11,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.List;
 
@@ -40,12 +41,12 @@ public class AprilTagsVisionSubsystem {
     }
 
     public AprilTagDetection getAprilTag (int ID) {
-        updateDetections();
-        int desiredID = ID;
+        List<AprilTagDetection> detections = updateDetections();
         AprilTagDetection aprilTag;
+
         // Method should return the detection of our desired AprilTag ID.
-        for (AprilTagDetection detection : currentDetections) {
-            if (detection.id == desiredID) {
+        for (AprilTagDetection detection : detections) {
+            if (detection.id == ID) {
                 aprilTag = detection;
                 return aprilTag;
             }
@@ -53,20 +54,55 @@ public class AprilTagsVisionSubsystem {
         return null;
     }
 
-    public void updateDetections () {
-        currentDetections = aprilTagsProcessor.getDetections();
+    public String findAprilTag(LinearOpMode linearOpMode, Telemetry telemetry, int ID, ElapsedTime elapsedTime, int timeoutSec) {
+        String AprilTagID = "No image";
+        AprilTagDetection aprilTag;
+
+        while (linearOpMode.opModeIsActive() && AprilTagID.equals("No image") && elapsedTime.seconds() < timeoutSec) {
+            if (getAprilTag(ID) != null) {
+                if (getAprilTag(ID).id == ID) {
+                    aprilTag = getAprilTag(ID);
+                    AprilTagID = Integer.toString(aprilTag.id);
+                    telemetry.addData("ID ", AprilTagID);
+                    telemetry.update();
+                }
+                else {
+                    AprilTagID = "No ID Found";
+                    telemetry.addData("ID ", AprilTagID);
+                    telemetry.update();
+                }
+            }
+        }
+        return AprilTagID;
     }
 
-    public double[] getAprilTagDistance(int ID) {
-        int desiredID = ID;
+    public List<AprilTagDetection> updateDetections () {
+        currentDetections = aprilTagsProcessor.getDetections();
+        return currentDetections;
+    }
 
+    public double[] getAprilTagDistance(LinearOpMode linearOpMode, int ID, ElapsedTime elapsedTime, int timeoutSec, Telemetry telemetry) {
+        AprilTagDetection detection;
         double[] position = new double[3];
-        AprilTagDetection detection = getAprilTag(desiredID);
-            if (detection.metadata != null) {
+        position[0] = 0;
+
+        while (linearOpMode.opModeIsActive() && position[0] == 0 && elapsedTime.seconds() < timeoutSec) {
+            if (getAprilTag(ID).id == ID) {
+                detection = getAprilTag(ID);
                 position[0] = detection.ftcPose.x;
                 position[1] = detection.ftcPose.y; // Finds the distance from the camera outwards to the april tag
                 position[2] = detection.ftcPose.z;
+
+                telemetry.addData("Distance ", position[1]);
+                telemetry.addData("Horizontal Offset ", position[0]);
+                telemetry.update();
+
             }
+            else {
+                telemetry.addLine("Could not find Distance");
+                telemetry.update();
+            }
+        }
         return position;
     }
 

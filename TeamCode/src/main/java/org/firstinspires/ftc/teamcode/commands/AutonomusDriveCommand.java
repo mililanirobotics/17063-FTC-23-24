@@ -3,6 +3,10 @@ package org.firstinspires.ftc.teamcode.commands;
 
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.PIDController;
 import org.firstinspires.ftc.teamcode.subsystems.AprilTagsVisionSubsystem;
@@ -16,18 +20,20 @@ public class AutonomusDriveCommand {
     private AprilTagsVisionSubsystem aprilTagsVision;
     private PIDController autoPID;
     private int desiredID;
+    private final ElapsedTime runtime = new ElapsedTime();
 
-    public AutonomusDriveCommand(MecanumSubsystem mecanumSubsystem, TensorFlowVisionSubsystem tensorFlowVisionvision, AprilTagsVisionSubsystem aprilTagsVision, int ID) {
+
+    public AutonomusDriveCommand(MecanumSubsystem mecanumSubsystem, TensorFlowVisionSubsystem tensorFlowVisionvision, AprilTagsVisionSubsystem aprilTagsVision) {
         m_MecanumSubsystem = mecanumSubsystem;
         this.tensorFlowVision = tensorFlowVisionvision;
         this.aprilTagsVision = aprilTagsVision;
         autoPID = new PIDController(Constants.AprilTagsConstants.kAprilTagP);
-        desiredID = ID;
     }
 
     // Alignment for camera to be in front
-    public void aprilTagAlignment() {
-        double[] aprilTagPositions = aprilTagsVision.getAprilTagDistance(desiredID);
+    public void aprilTagAlignment(LinearOpMode linearOpMode, int ID) {
+
+        double[] aprilTagPositions = aprilTagsVision.getAprilTagDistance(linearOpMode, ID, runtime, 5, telemetry);
         double powerOutput = autoPID.PIDOutput(aprilTagPositions[0], 0, Constants.AprilTagsConstants.kAprilTagMin, Constants.AprilTagsConstants.kAprilTagMax);
 
         if (aprilTagPositions[0] > 1) {
@@ -42,8 +48,8 @@ public class AutonomusDriveCommand {
     }
 
     // Input targetDistance as the maximum distance of the camera from the apriltag
-    public void aprilTagMovement () {
-        double[] aprilTagsPositions = aprilTagsVision.getAprilTagDistance(desiredID);
+    public void aprilTagMovement (LinearOpMode linearOpMode, int ID) {
+        double[] aprilTagsPositions = aprilTagsVision.getAprilTagDistance(linearOpMode, ID, runtime, 5, telemetry);
         double powerOutput = autoPID.PIDOutput(aprilTagsPositions[1], Constants.AprilTagsConstants.kAprilTagTargetDistance, Constants.AprilTagsConstants.kAprilTagMin, Constants.AprilTagsConstants.kAprilTagMax);
 
 

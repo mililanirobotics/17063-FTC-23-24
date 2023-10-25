@@ -13,17 +13,24 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 public class TestingAutoCamera extends LinearOpMode {
     AprilTagsVisionSubsystem aprilTagsVisionSubsystem;
     AprilTagDetection detection;
+    String ID;
+    final ElapsedTime runtime = new ElapsedTime();
+
 
     @Override
     public void runOpMode() {
         aprilTagsVisionSubsystem = new AprilTagsVisionSubsystem(this.hardwareMap, telemetry);
 
-        detection = aprilTagsVisionSubsystem.getAprilTag(4);
-
-
-        telemetry.addData("ID: ", detection.id);
-        telemetry.addData("Y-Pos", detection.ftcPose.y);
-
         waitForStart();
+
+
+
+        // Testing code to get the correct aprilTag ID
+//        detection = aprilTagsVisionSubsystem.getAprilTag(1);
+//        telemetry.addData("ID ", detection.id);
+//        telemetry.update();
+
+        // aprilTagsVisionSubsystem.findAprilTag(this, telemetry, 1, runtime, 5);
+        aprilTagsVisionSubsystem.getAprilTagDistance(this, 1, runtime, 5, telemetry);
     }
 }
