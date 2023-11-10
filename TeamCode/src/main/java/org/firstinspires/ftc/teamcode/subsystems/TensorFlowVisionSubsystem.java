@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.List;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -43,37 +44,40 @@ public class TensorFlowVisionSubsystem {
                 .build();
     }
 
-    public String operate(LinearOpMode linearOpMode, Telemetry telemetry) {
-        String teamPropImage = "No Image";
+    public Recognition detectTeamProp (Telemetry telemetry) {
+        Recognition teamProp;
+        List<Recognition> updatedRecognitions = tfodProcessor.getRecognitions();
 
-        while (linearOpMode.opModeIsActive() && teamPropImage == "No Image") {
-            if (tfodProcessor.getRecognitions() == null) {
-                List<Recognition> updatedRecognitions = tfodProcessor.getRecognitions();
-                if (updatedRecognitions != null) {
-                    for (Recognition recognition : updatedRecognitions) {
-                        teamPropImage = recognition.getLabel();
+        for (Recognition recognition : updatedRecognitions) {
+            if (recognition.getLabel() == LABELS[0]) {
+                teamProp = recognition;
 
-                        telemetry.addData("Image Recognized: ", teamPropImage);
-                        telemetry.update();
-                    }
-                }
+                telemetry.addData("Image Recognized: ", teamProp.getLabel());
+                telemetry.update();
+                return teamProp;
             }
         }
-        return teamPropImage;
+        return null;
     }
 
-    public double[] teamPropDimensions() {
-        double[] teamPropDimensions = new double[2];
-        List<Recognition> currentRecognitions = tfodProcessor.getRecognitions();
-        for (Recognition recognition : currentRecognitions) {
-            teamPropDimensions[0] = (recognition.getLeft() + recognition.getRight()) / 2; // Gets Length Dimensions
-            teamPropDimensions[1] = (recognition.getTop() + recognition.getBottom()) / 2; // Gets Width Dimensions
-        }
+    public float[] teamPropDimensions(Telemetry telemetry) {
+        float[] teamPropDimensions = new float[4];
 
+
+        while (detectTeamProp(telemetry).getLabel() != LABELS[0]) {
+            if (detectTeamProp(telemetry).getLabel() == LABELS[0]) {
+                Recognition teamProp = detectTeamProp(telemetry);
+
+                teamPropDimensions[0] = (teamProp.getLeft() + teamProp.getRight()) / 2; // Gets Length Dimensions
+                teamPropDimensions[1] = (teamProp.getTop() + teamProp.getBottom()) / 2; // Gets Width Dimensions
+                teamPropDimensions[2] = teamProp.getLeft(); // Gets the coordinate of the left side of the Image Dimensions
+                teamPropDimensions[3] = teamProp.getRight(); // Gets the coordinate of the right side of the Image Dimensions
+            }
+        }
         return teamPropDimensions;
     }
 
     public void shutdown() {
-
+        camera.close();
     }
 }

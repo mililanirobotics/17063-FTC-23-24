@@ -17,12 +17,33 @@ public class EncoderDriveCommand {
         encoderPID = new PIDController(Constants.EncoderDriveConstants.kEncoderDriveP);
     }
 
+    // Runs the mecanum drive to reach target encoder positions
     public void encoderDriveOperate (double distance, String direction) {
         int motorTarget = (int)(distance * Constants.EncoderDriveConstants.kCOUNTS_PER_INCH);
 
-        double powerOutput = encoderPID.PIDOutput(m_MecanumSubsystem.encoderReading(), motorTarget, Constants.EncoderDriveConstants.kEncoderDriveMin, Constants.EncoderDriveConstants.kEncoderDriveMax);
+        m_MecanumSubsystem.setEncoderTarget(motorTarget, direction);
 
-        m_MecanumSubsystem.autoDrivePower(powerOutput, direction);
+        while (m_MecanumSubsystem.isBusyCheck() == true) {
+            double powerOutput = encoderPID.PIDOutput(m_MecanumSubsystem.encoderReading()[0], motorTarget, Constants.EncoderDriveConstants.kEncoderDriveMin, Constants.EncoderDriveConstants.kEncoderDriveMax);
+            m_MecanumSubsystem.autoPower(powerOutput, powerOutput);
+        }
+
+        m_MecanumSubsystem.shutdown();
+    }
+
+    public void turnDriveOperate (int angle) {
+        double currentAngle = m_MecanumSubsystem.getAngle();
+        int targetAngle = angle;
+        double powerOutput = 0;
+
+        if (currentAngle < targetAngle - 1) {
+            powerOutput = encoderPID.PIDOutput(currentAngle, targetAngle, Constants.EncoderDriveConstants.kEncoderDriveMin, Constants.EncoderDriveConstants.kEncoderDriveMax);
+            m_MecanumSubsystem.autoPower(powerOutput, -powerOutput);
+        }
+        else if (currentAngle > targetAngle + 1) {
+            powerOutput = encoderPID.PIDOutput(currentAngle, targetAngle, Constants.EncoderDriveConstants.kEncoderDriveMin, Constants.EncoderDriveConstants.kEncoderDriveMax);
+            m_MecanumSubsystem.autoPower(-powerOutput, powerOutput);
+        }
     }
 
     public void shutdown() {

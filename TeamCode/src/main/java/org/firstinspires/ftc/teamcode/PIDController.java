@@ -9,7 +9,7 @@ public class PIDController {
 
     public double PIDOutput (double currentInput, double targetInput, double minLimit, double maxLimit) {
         double output;
-        double error = targetInput - currentInput;
+        double error =  currentInput - targetInput;
 
         output = p * error;
 

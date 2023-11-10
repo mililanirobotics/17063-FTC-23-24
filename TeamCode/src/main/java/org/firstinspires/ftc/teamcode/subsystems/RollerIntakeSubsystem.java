@@ -28,15 +28,15 @@ public class RollerIntakeSubsystem {
         }
     }
 
-    public void autoOperate(LinearOpMode linearOpMode, double speed, double distance, String direction, Telemetry telemetry) {
+    public void autoOperate(LinearOpMode linearOpMode, double speed, double distance, String direction) {
         int motorTarget = (int)(distance * Constants.CascadeLiftConstants.kCOUNTS_PER_INCH);
 
         rollerIntakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        if (direction.equals("inwards")){
+        if (direction.equals("Intake")){
             rollerIntakeMotor.setTargetPosition(motorTarget);
         }
-        else {
+        else if (direction.equals("Score")){
             rollerIntakeMotor.setTargetPosition(-motorTarget);
         }
 

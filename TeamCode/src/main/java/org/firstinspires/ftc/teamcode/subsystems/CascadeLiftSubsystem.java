@@ -38,25 +38,28 @@ public class CascadeLiftSubsystem {
         }
     }
 
-    public void autoOperate(LinearOpMode linearOpMode, double speed, double distance, String direction, Telemetry telemetry){
+    // Autonomous operation of the Lift
+    public void autoOperate(LinearOpMode linearOpMode, double speed, double distance, String direction){
         int motorTarget = (int)(distance * Constants.CascadeLiftConstants.kCOUNTS_PER_INCH);
 
         leftLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        if (direction.equals("up")){
+        if (direction.equals("Up")){
             leftLiftMotor.setTargetPosition(motorTarget);
             rightLiftMotor.setTargetPosition(motorTarget);
         }
-        else {
+        else if (direction.equals("Down")) {
             leftLiftMotor.setTargetPosition(-motorTarget);
             rightLiftMotor.setTargetPosition(-motorTarget);
         }
 
-        leftLiftMotor.setPower(speed);
-        rightLiftMotor.setPower(speed);
         leftLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        leftLiftMotor.setPower(speed);
+        rightLiftMotor.setPower(speed);
+
 
         while (linearOpMode.opModeIsActive() && leftLiftMotor.isBusy() && rightLiftMotor.isBusy()){
 

@@ -33,14 +33,12 @@ public class ClawSubsystem {
         }
     }
 
-    public void autoOperate () {
-        if (clawToggle) {
+    public void autoOperate (String direction) {
+        if (direction == "Close") {
             clawServo.setPosition(1);
-            clawToggle = false;
         }
-        else {
+        else if (direction == "Open") {
             clawServo.setPosition(0);
-            clawToggle = true;
         }
     }
 

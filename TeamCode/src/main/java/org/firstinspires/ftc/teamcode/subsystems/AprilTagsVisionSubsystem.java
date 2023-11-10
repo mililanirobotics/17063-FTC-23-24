@@ -54,6 +54,7 @@ public class AprilTagsVisionSubsystem {
         return null;
     }
 
+    // Testing method to get the april tag ID, may not be used for actual competition code.
     public String findAprilTag(LinearOpMode linearOpMode, Telemetry telemetry, int ID, ElapsedTime elapsedTime, int timeoutSec) {
         String AprilTagID = "No image";
         AprilTagDetection aprilTag;
@@ -81,26 +82,22 @@ public class AprilTagsVisionSubsystem {
         return currentDetections;
     }
 
+    // Active method for
     public double[] getAprilTagDistance(LinearOpMode linearOpMode, int ID, ElapsedTime elapsedTime, int timeoutSec, Telemetry telemetry) {
         AprilTagDetection detection;
         double[] position = new double[3];
         position[0] = 0;
 
         while (linearOpMode.opModeIsActive() && position[0] == 0 && elapsedTime.seconds() < timeoutSec) {
-            if (getAprilTag(ID).id == ID) {
+            if (getAprilTag(ID) != null) {
                 detection = getAprilTag(ID);
                 position[0] = detection.ftcPose.x;
                 position[1] = detection.ftcPose.y; // Finds the distance from the camera outwards to the april tag
                 position[2] = detection.ftcPose.z;
 
-                telemetry.addData("Distance ", position[1]);
-                telemetry.addData("Horizontal Offset ", position[0]);
-                telemetry.update();
-
-            }
-            else {
-                telemetry.addLine("Could not find Distance");
-                telemetry.update();
+//                telemetry.addData("Distance ", position[1]);
+//                telemetry.addData("Horizontal Offset ", position[0]);
+//                telemetry.update();
             }
         }
         return position;

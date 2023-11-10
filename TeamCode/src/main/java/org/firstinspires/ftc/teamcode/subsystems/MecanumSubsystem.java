@@ -8,6 +8,10 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Constants;
 
 public class MecanumSubsystem {
@@ -46,12 +50,6 @@ public class MecanumSubsystem {
         telemetry.update();
     }
 
-    public double encoderReading () {
-        double encoderReading = leftFrontDrive.getCurrentPosition() * Constants.EncoderDriveConstants.kCOUNTS_PER_INCH;
-
-        return encoderReading;
-    }
-
     public void operate(Gamepad gamepad) {
         double y = -gamepad.left_stick_y;
         double x = gamepad.left_stick_x;
@@ -79,36 +77,74 @@ public class MecanumSubsystem {
         }
     }
 
-    public void autoDrivePower (double power, String direction) {
+    public double[] encoderReading () {
+        double[] encoderReading = new double[4];
+
+        encoderReading[0] = leftFrontDrive.getCurrentPosition();
+        encoderReading[1] = rightFrontDrive.getCurrentPosition();
+        encoderReading[2] = leftBackDrive.getCurrentPosition();
+        encoderReading[3] = rightBackDrive.getCurrentPosition();
+
+        return encoderReading;
+    }
+
+    public void setEncoderTarget (int targetCounts, String direction) {
         leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         if (direction.equals("Forwards")) {
-            leftFrontDrive.setPower(power);
-            rightFrontDrive.setPower(power);
-            leftBackDrive.setPower(power);
-            rightBackDrive.setPower(power);
+            leftFrontDrive.setTargetPosition(targetCounts);
+            rightFrontDrive.setTargetPosition(targetCounts);
+            leftBackDrive.setTargetPosition(targetCounts);
+            rightBackDrive.setTargetPosition(targetCounts);
         }
         else if (direction.equals("Backwards")) {
-            leftFrontDrive.setPower(-power);
-            rightFrontDrive.setPower(-power);
-            leftBackDrive.setPower(-power);
-            rightBackDrive.setPower(-power);
+            leftFrontDrive.setTargetPosition(-targetCounts);
+            rightFrontDrive.setTargetPosition(-targetCounts);
+            leftBackDrive.setTargetPosition(-targetCounts);
+            rightBackDrive.setTargetPosition(-targetCounts);
         }
         else if (direction.equals("Left")) {
-            leftFrontDrive.setPower(-power);
-            rightFrontDrive.setPower(power);
-            leftBackDrive.setPower(power);
-            rightBackDrive.setPower(-power);
+            leftFrontDrive.setTargetPosition(-targetCounts);
+            rightFrontDrive.setTargetPosition(targetCounts);
+            leftBackDrive.setTargetPosition(targetCounts);
+            rightBackDrive.setTargetPosition(-targetCounts);
         }
         else if (direction.equals("Right")) {
-            leftFrontDrive.setPower(power);
-            rightFrontDrive.setPower(-power);
-            leftBackDrive.setPower(-power);
-            rightBackDrive.setPower(power);
+            leftFrontDrive.setTargetPosition(targetCounts);
+            rightFrontDrive.setTargetPosition(-targetCounts);
+            leftBackDrive.setTargetPosition(-targetCounts);
+            rightBackDrive.setTargetPosition(targetCounts);
         }
+
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    public void autoPower (double leftPower, double rightPower) {
+        leftFrontDrive.setPower(leftPower);
+        rightFrontDrive.setPower(rightPower);
+        leftBackDrive.setPower(leftPower);
+        rightBackDrive.setPower(rightPower);
+    }
+
+    public double getAngle() {
+        return imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+    }
+
+    public boolean isBusyCheck() {
+        boolean isBusy = true;
+        if (leftFrontDrive.isBusy() == true || rightFrontDrive.isBusy() == true || leftBackDrive.isBusy() == true || rightBackDrive.isBusy() == true) {
+
+        }
+        else {
+            isBusy = false;
+        }
+        return isBusy;
     }
 
     public void shutdown() {
