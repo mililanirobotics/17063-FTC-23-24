@@ -20,7 +20,7 @@ public class TensorFlowVisionSubsystem {
     private VisionPortal visionPortal;
     private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/"; //Change into the actual tensorflow module file
     private static final String[] LABELS = {
-            "TeamProp"
+            "teamProp"
     };
 
 
@@ -44,6 +44,7 @@ public class TensorFlowVisionSubsystem {
                 .build();
     }
 
+    // Checks if the camera can see the team prop and returns a Recognition object
     public Recognition detectTeamProp (Telemetry telemetry) {
         Recognition teamProp;
         List<Recognition> updatedRecognitions = tfodProcessor.getRecognitions();
@@ -60,6 +61,7 @@ public class TensorFlowVisionSubsystem {
         return null;
     }
 
+    // Returns the dimensions of the image capture box from the camera
     public float[] teamPropDimensions(Telemetry telemetry) {
         float[] teamPropDimensions = new float[4];
 

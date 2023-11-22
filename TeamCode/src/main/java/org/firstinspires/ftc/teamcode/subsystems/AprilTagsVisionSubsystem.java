@@ -40,11 +40,11 @@ public class AprilTagsVisionSubsystem {
 
     }
 
+    // Method should return the detection of desired AprilTag ID.
     public AprilTagDetection getAprilTag (int ID) {
         List<AprilTagDetection> detections = updateDetections();
         AprilTagDetection aprilTag;
 
-        // Method should return the detection of our desired AprilTag ID.
         for (AprilTagDetection detection : detections) {
             if (detection.id == ID) {
                 aprilTag = detection;
@@ -119,6 +119,5 @@ public class AprilTagsVisionSubsystem {
         telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
         telemetry.update();
     }
-        // double[] god = getAprilTagDistance();
-    // god[0]
+
 }

@@ -37,10 +37,10 @@ public class AutonomusDriveCommand {
         double powerOutput = autoPID.PIDOutput(aprilTagPositions[0], 0, Constants.AprilTagsConstants.kAprilTagMin, Constants.AprilTagsConstants.kAprilTagMax);
 
         if (aprilTagPositions[0] > 1) {
-            m_MecanumSubsystem.autoDrivePower(powerOutput, "Left");
+            m_MecanumSubsystem.autoStrafePower(-powerOutput, powerOutput);
         }
         else if (aprilTagPositions[0] < 1) {
-            m_MecanumSubsystem.autoDrivePower(powerOutput, "right");
+            m_MecanumSubsystem.autoStrafePower(powerOutput, -powerOutput);
         }
         else {
             m_MecanumSubsystem.shutdown();
@@ -55,7 +55,7 @@ public class AutonomusDriveCommand {
 
         while(aprilTagsPositions[1] > Constants.AprilTagsConstants.kAprilTagTargetDistance) {
             if (aprilTagsPositions[1] > Constants.AprilTagsConstants.kAprilTagTargetDistance) {
-                m_MecanumSubsystem.autoDrivePower(powerOutput, "Backwards");
+                m_MecanumSubsystem.autoPower(-powerOutput, -powerOutput);
                 aprilTagsPositions = aprilTagsVision.getAprilTagDistance(linearOpMode, ID, runtime, 5, telemetry);
             }
         }

@@ -50,6 +50,7 @@ public class MecanumSubsystem {
         telemetry.update();
     }
 
+    // Control method for mecanum drive during Tele-Op
     public void operate(Gamepad gamepad) {
         double y = -gamepad.left_stick_y;
         double x = gamepad.left_stick_x;
@@ -77,6 +78,7 @@ public class MecanumSubsystem {
         }
     }
 
+    // Returns the current encoder count reading.
     public double[] encoderReading () {
         double[] encoderReading = new double[4];
 
@@ -88,6 +90,7 @@ public class MecanumSubsystem {
         return encoderReading;
     }
 
+    // Sets the counts target for encoders including directional targets.
     public void setEncoderTarget (int targetCounts, String direction) {
         leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -125,6 +128,7 @@ public class MecanumSubsystem {
         rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
+    // Sets the drive motors to a given power
     public void autoPower (double leftPower, double rightPower) {
         leftFrontDrive.setPower(leftPower);
         rightFrontDrive.setPower(rightPower);
@@ -132,10 +136,19 @@ public class MecanumSubsystem {
         rightBackDrive.setPower(rightPower);
     }
 
+    public void autoStrafePower (double leftPower, double rightPower) {
+        leftFrontDrive.setPower(-leftPower);
+        rightFrontDrive.setPower(rightPower);
+        leftBackDrive.setPower(leftPower);
+        rightBackDrive.setPower(-rightPower);
+    }
+
+    // Returns the Z-axis rotational angle
     public double getAngle() {
         return imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
     }
 
+    // A check statement for waiting until the drive motors stop moving.
     public boolean isBusyCheck() {
         boolean isBusy = true;
         if (leftFrontDrive.isBusy() == true || rightFrontDrive.isBusy() == true || leftBackDrive.isBusy() == true || rightBackDrive.isBusy() == true) {
@@ -147,6 +160,7 @@ public class MecanumSubsystem {
         return isBusy;
     }
 
+    // Sets all motor power to zero
     public void shutdown() {
         leftFrontDrive.setPower(0);
         rightFrontDrive.setPower(0);

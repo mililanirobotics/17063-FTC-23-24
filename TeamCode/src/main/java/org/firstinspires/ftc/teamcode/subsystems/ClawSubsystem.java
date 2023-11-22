@@ -17,6 +17,7 @@ public class ClawSubsystem {
         clawServo.setDirection(Servo.Direction.FORWARD);
     }
 
+    // Tele-Op Method for controlling the claw
     public void operate (Gamepad gamepad) {
         if (gamepad.a && !clawToggle) {
             clawToggle = true;
@@ -26,10 +27,12 @@ public class ClawSubsystem {
         }
 
         if (clawToggle) {
+            // Close position for the claw
             clawServo.setPosition(1);
         }
         else {
-            clawServo.setPosition(0);
+            // Open position for the claw
+            clawServo.setPosition(0.55);
         }
     }
 
@@ -38,7 +41,7 @@ public class ClawSubsystem {
             clawServo.setPosition(1);
         }
         else if (direction == "Open") {
-            clawServo.setPosition(0);
+            clawServo.setPosition(0.55);
         }
     }
 
