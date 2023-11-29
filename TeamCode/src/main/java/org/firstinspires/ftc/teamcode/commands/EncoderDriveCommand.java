@@ -18,7 +18,7 @@ public class EncoderDriveCommand {
     }
 
     // Runs the mecanum drive to reach target encoder positions
-    public void encoderDriveOperate (double distance, String direction) {
+    public void operate (double distance, String direction) {
         int motorTarget = (int)(distance * Constants.EncoderDriveConstants.kCOUNTS_PER_INCH);
         double powerOutput;
 
@@ -29,24 +29,6 @@ public class EncoderDriveCommand {
             m_MecanumSubsystem.autoPower(powerOutput, powerOutput);
         }
 
-        m_MecanumSubsystem.shutdown();
-    }
-
-    public void turnDriveOperate (int angle) {
-        double currentAngle = m_MecanumSubsystem.getAngle();
-        int targetAngle = (int)(angle + currentAngle);
-        double powerOutput;
-
-        while (currentAngle < targetAngle - 1 || currentAngle > targetAngle + 1) {
-            if (currentAngle < targetAngle - 1) {
-                powerOutput = encoderPID.PIDOutput(currentAngle, targetAngle, Constants.EncoderDriveConstants.kEncoderDriveMin, Constants.EncoderDriveConstants.kEncoderDriveMax);
-                m_MecanumSubsystem.autoPower(powerOutput, -powerOutput);
-            }
-            else if (currentAngle > targetAngle + 1) {
-                powerOutput = encoderPID.PIDOutput(currentAngle, targetAngle, Constants.EncoderDriveConstants.kEncoderDriveMin, Constants.EncoderDriveConstants.kEncoderDriveMax);
-                m_MecanumSubsystem.autoPower(-powerOutput, powerOutput);
-            }
-        }
         m_MecanumSubsystem.shutdown();
     }
 

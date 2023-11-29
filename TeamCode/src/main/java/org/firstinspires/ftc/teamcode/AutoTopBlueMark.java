@@ -5,17 +5,18 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.commands.AutonomusDriveCommand;
 import org.firstinspires.ftc.teamcode.commands.EncoderDriveCommand;
-import org.firstinspires.ftc.teamcode.subsystems.AprilTagsVisionSubsystem;
+import org.firstinspires.ftc.teamcode.commands.TurnDriveCommand;
+import org.firstinspires.ftc.teamcode.subsystems.MecanumSubsystem;
 //import org.firstinspires.ftc.teamcode.subsystems.CascadeLiftSubsystem;
 //import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.MecanumSubsystem;
-//import org.firstinspires.ftc.teamcode.subsystems.RollerIntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.RollerIntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.AprilTagsVisionSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TensorFlowVisionSubsystem;
 
 @Autonomous (name="AutoTopBlueMark", group="Linear OpMode")
 public class AutoTopBlueMark extends LinearOpMode {
     private MecanumSubsystem mecanumSubsystem;
-//    private RollerIntakeSubsystem rollerIntakeSubsystem;
+    private RollerIntakeSubsystem rollerIntakeSubsystem;
 //    private CascadeLiftSubsystem cascadeLiftSubsystem;
 //    private ClawSubsystem clawSubsystem;
     private TensorFlowVisionSubsystem tensorFlowVisionSubsystem;
@@ -23,6 +24,7 @@ public class AutoTopBlueMark extends LinearOpMode {
 
     private AutonomusDriveCommand autonomusDriveCommand;
     private EncoderDriveCommand encoderDriveCommand;
+    private TurnDriveCommand turnDriveCommand;
 
     private float[] teamPropDimensions;
     private int desiredID;
@@ -30,7 +32,7 @@ public class AutoTopBlueMark extends LinearOpMode {
     @Override
     public void runOpMode() {
         mecanumSubsystem = new MecanumSubsystem(this.hardwareMap, telemetry);
-//        rollerIntakeSubsystem = new RollerIntakeSubsystem(this.hardwareMap);
+        rollerIntakeSubsystem = new RollerIntakeSubsystem(this.hardwareMap);
 //        cascadeLiftSubsystem = new CascadeLiftSubsystem(this.hardwareMap);
 //        clawSubsystem = new ClawSubsystem(this.hardwareMap);
         tensorFlowVisionSubsystem = new TensorFlowVisionSubsystem(this, telemetry);
@@ -38,13 +40,16 @@ public class AutoTopBlueMark extends LinearOpMode {
 
         encoderDriveCommand = new EncoderDriveCommand(mecanumSubsystem);
         autonomusDriveCommand = new AutonomusDriveCommand(mecanumSubsystem, aprilTagsVisionSubsystem);
+        turnDriveCommand = new TurnDriveCommand(mecanumSubsystem);
         waitForStart();
 
         // Code to run after autonomous starts
 
         /* Backup code for auto */
-//        encoderDriveCommand.encoderDriveOperate(1, "Backwards");
-//        encoderDriveCommand.encoderDriveOperate(8, "Right");
+//        encoderDriveCommand.operate(1, "Backwards");
+//        encoderDriveCommand.operate(40, "Right");
+
+        rollerIntakeSubsystem.autoOperate(this, 0.6, -20, "Score");
 
         // Detect the TeamProp and get the dimensions of the image and coordinates of the left and right sides of the image
         while (teamPropDimensions == null) {
@@ -53,7 +58,7 @@ public class AutoTopBlueMark extends LinearOpMode {
             }
         }
 
-        encoderDriveCommand.encoderDriveOperate(8, "Backwards");
+        encoderDriveCommand.operate(8, "Backwards");
 //
 //        // Decide which Spike Mark to travel towards
 //        if (teamPropDimensions[3] > Constants.TeamPropConstants.kTeamPropTargetLeftMin || teamPropDimensions[4] < Constants.TeamPropConstants.kTeamPropTargetLeftMax) {

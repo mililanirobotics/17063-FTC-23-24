@@ -5,10 +5,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.commands.AutonomusDriveCommand;
 import org.firstinspires.ftc.teamcode.commands.EncoderDriveCommand;
+import org.firstinspires.ftc.teamcode.commands.TurnDriveCommand;
 import org.firstinspires.ftc.teamcode.subsystems.AprilTagsVisionSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.MecanumSubsystem;
 //import org.firstinspires.ftc.teamcode.subsystems.CascadeLiftSubsystem;
 //import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.MecanumSubsystem;
 //import org.firstinspires.ftc.teamcode.subsystems.RollerIntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TensorFlowVisionSubsystem;
 
@@ -23,6 +24,7 @@ public class AutoBottomRedMark extends LinearOpMode {
 
     private AutonomusDriveCommand autonomusDriveCommand;
     private EncoderDriveCommand encoderDriveCommand;
+    private TurnDriveCommand turnDriveCommand;
 
     private float[] teamPropDimensions;
     private int desiredID;
@@ -38,6 +40,7 @@ public class AutoBottomRedMark extends LinearOpMode {
 
         encoderDriveCommand = new EncoderDriveCommand(mecanumSubsystem);
         autonomusDriveCommand = new AutonomusDriveCommand(mecanumSubsystem, aprilTagsVisionSubsystem);
+        turnDriveCommand = new TurnDriveCommand(mecanumSubsystem);
         waitForStart();
 
         // Code to run after autonomous starts
@@ -52,58 +55,58 @@ public class AutoBottomRedMark extends LinearOpMode {
             }
         }
 
-        encoderDriveCommand.encoderDriveOperate(8, "Backwards");
+        encoderDriveCommand.operate(8, "Backwards");
 
-//
+
 //        // Decide which Spike Mark to travel towards
 //        if (teamPropDimensions[3] > Constants.TeamPropConstants.kTeamPropTargetLeftMin || teamPropDimensions[4] < Constants.TeamPropConstants.kTeamPropTargetLeftMax) {
 //            // Left Spike Mark Pathing
 //            desiredID = 1;
 //
 //            // Drive towards Spike Mark & Scoring
-//            encoderDriveCommand.encoderDriveOperate(10, "Turn-Right");
-//            encoderDriveCommand.encoderDriveOperate(6, "Forwards");
+//            turnDriveCommand.operate(-90);
+//            encoderDriveCommand.operate(6, "Forwards");
 //
 //            rollerIntakeSubsystem.autoOperate(this, Constants.RollerIntakeConstants.kRollerAutoSpeed, Constants.RollerIntakeConstants.kRollerDistance, "Score");
 //
-//            encoderDriveCommand.encoderDriveOperate(6, "Backwards");
-//            encoderDriveCommand.encoderDriveOperate(10, "Turn-Left");
+//            encoderDriveCommand.operate(6, "Backwards");
+//            turnDriveCommand.operate(90);
 //        }
 //        else if (teamPropDimensions[0] > Constants.TeamPropConstants.kTeamPropTargetLengthMin || teamPropDimensions[0] < Constants.TeamPropConstants.kTeamPropTargetLengthMax) {
 //            // Middle Spike Mark Pathing
 //            desiredID = 2;
 //
 //            // Spike Mark Scoring
-//            encoderDriveCommand.encoderDriveOperate(20, "Turn-Left");
+//            turnDriveCommand.operate(180);
 //
 //            rollerIntakeSubsystem.autoOperate(this, Constants.RollerIntakeConstants.kRollerAutoSpeed, Constants.RollerIntakeConstants.kRollerDistance, "Score");
 //
-//            encoderDriveCommand.encoderDriveOperate(20, "Turn-Right");
+//            turnDriveCommand.operate(-180);
 //        }
 //        else if (teamPropDimensions[4] > Constants.TeamPropConstants.kTeamPropTargetRightMin || teamPropDimensions[4] < Constants.TeamPropConstants.kTeamPropTargetRightMax) {
 //            // Right Spike Mark Pathing
 //            desiredID = 3;
 //
 //            // Drive towards Spike Mark & Scoring
-//            encoderDriveCommand.turnDriveOperate(-90);
-//            encoderDriveCommand.encoderDriveOperate(6, "Forwards");
+//            turnDriveCommand.operate(90);
+//            encoderDriveCommand.operate(6, "Forwards");
 //
 //            rollerIntakeSubsystem.autoOperate(this, Constants.RollerIntakeConstants.kRollerAutoSpeed, Constants.RollerIntakeConstants.kRollerDistance, "Score");
 //
-//            encoderDriveCommand.encoderDriveOperate(6, "Backwards");
-//            encoderDriveCommand.turnDriveOperate(90);
+//            encoderDriveCommand.operate(6, "Backwards");
+//            turnDriveCommand.operate(-90);
 //        }
 //        else {
-//            encoderDriveCommand.encoderDriveOperate(96, "Left");
+//            encoderDriveCommand.operate(96, "Left");
 //            stop();
 //        }
-
-//        // Drive towards Backdrop
-//        encoderDriveCommand.encoderDriveOperate(26, "Forwards");
-//        encoderDriveCommand.encoderDriveOperate(72, "Left");
-//        encoderDriveCommand.encoderDriveOperate(24, "Backwards");
 //
-//        encoderDriveCommand.turnDriveOperate(-90);
+//        // Drive towards Backdrop
+//        encoderDriveCommand.operate(26, "Forwards");
+//        encoderDriveCommand.operate(72, "Left");
+//        encoderDriveCommand.operate(24, "Backwards");
+//
+//        turnDriveCommand.operate(90);
 //
 //        // Aligning and moving towards Backdrop AprilTags
 //        autonomusDriveCommand.aprilTagAlignment(this, desiredID);
@@ -115,7 +118,7 @@ public class AutoBottomRedMark extends LinearOpMode {
 //        cascadeLiftSubsystem.autoOperate(this, Constants.CascadeLiftConstants.kLiftAutoPower, Constants.CascadeLiftConstants.kAutoHeight, "Down");
 //
 //        // Move into parking
-//        encoderDriveCommand.encoderDriveOperate(16, "Left");
+//        encoderDriveCommand.operate(16, "Left");
 
         // Shutdown
         mecanumSubsystem.shutdown();

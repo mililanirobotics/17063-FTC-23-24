@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.commands.AutonomusDriveCommand;
 import org.firstinspires.ftc.teamcode.commands.EncoderDriveCommand;
+import org.firstinspires.ftc.teamcode.commands.TurnDriveCommand;
 import org.firstinspires.ftc.teamcode.subsystems.AprilTagsVisionSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumSubsystem;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -18,6 +19,7 @@ public class AutoTesting extends LinearOpMode {
     AprilTagsVisionSubsystem aprilTagsVisionSubsystem;
     EncoderDriveCommand encoderDriveCommand;
     AutonomusDriveCommand autonomusDriveCommand;
+    TurnDriveCommand turnDriveCommand;
 
     String ID;
     final ElapsedTime runtime = new ElapsedTime();
@@ -27,17 +29,19 @@ public class AutoTesting extends LinearOpMode {
     public void runOpMode() {
         aprilTagsVisionSubsystem = new AprilTagsVisionSubsystem(this.hardwareMap, telemetry);
         mecanumSubsystem = new MecanumSubsystem(this.hardwareMap, telemetry);
+
         encoderDriveCommand = new EncoderDriveCommand(mecanumSubsystem);
         autonomusDriveCommand = new AutonomusDriveCommand(mecanumSubsystem, aprilTagsVisionSubsystem);
+        turnDriveCommand = new TurnDriveCommand(mecanumSubsystem);
 
         waitForStart();
 
         // Testing encoder drive
-        encoderDriveCommand.encoderDriveOperate(15, "Forwards");
+        encoderDriveCommand.operate(15, "Forwards");
 
         // Testing turn drive
-        encoderDriveCommand.turnDriveOperate(90);
-        encoderDriveCommand.turnDriveOperate(-90);
+        turnDriveCommand.operate(-90);
+        turnDriveCommand.operate(90);
 
 //         Testing code to get the correct aprilTag ID
 //        detection = aprilTagsVisionSubsystem.getAprilTag(1);

@@ -25,9 +25,10 @@ public class Constants {
     }
 
     public static class EncoderDriveConstants {
-        public static final double kPULSES_PER_ROTATION = 28;
-        public static final double kCOUNTS_PER_ROTATION = kPULSES_PER_ROTATION * 4;
-        public static final double kDRIVE_GEAR_REDUCTION = 19.2;
+//        public static final double kPULSES_PER_ROTATION = 28;
+//        public static final double kCOUNTS_PER_ROTATION = kPULSES_PER_ROTATION * 4;
+        public static final double kCOUNTS_PER_ROTATION = 537.7;
+        public static final double kDRIVE_GEAR_REDUCTION = 1.5625;
         public static final double kWHEEL_DIAMETER = 3.77953;
         public static final double kWHEEL_CIRCUMFERENCE = Math.PI * kWHEEL_DIAMETER;
         public static final double kCOUNTS_PER_INCH = (kCOUNTS_PER_ROTATION * kDRIVE_GEAR_REDUCTION) / kWHEEL_CIRCUMFERENCE;
@@ -35,6 +36,14 @@ public class Constants {
         public static final double kEncoderDriveP = 0.2;
         public static final double kEncoderDriveMin = 0.2;
         public static final double kEncoderDriveMax = 0.5;
+    }
+
+    public static class TurnDriveConstants {
+
+
+        public static final double kTurnDriveP = 0.2;
+        public static final double kTurnDriveMin = 0.2;
+        public static final double kTurnDriveMax = 0.6;
     }
 
     public static class AprilTagsConstants {

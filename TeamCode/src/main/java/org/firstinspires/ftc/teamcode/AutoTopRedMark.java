@@ -5,12 +5,13 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.commands.AutonomusDriveCommand;
 import org.firstinspires.ftc.teamcode.commands.EncoderDriveCommand;
-import org.firstinspires.ftc.teamcode.subsystems.AprilTagsVisionSubsystem;
+import org.firstinspires.ftc.teamcode.commands.TurnDriveCommand;
+import org.firstinspires.ftc.teamcode.subsystems.MecanumSubsystem;
 //import org.firstinspires.ftc.teamcode.subsystems.CascadeLiftSubsystem;
 //import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.MecanumSubsystem;
 //import org.firstinspires.ftc.teamcode.subsystems.RollerIntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.TensorFlowVisionSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.AprilTagsVisionSubsystem;
 
 @Autonomous (name="AutoTopRedMark", group="Linear OpMode")
 public class AutoTopRedMark extends LinearOpMode {
@@ -23,6 +24,7 @@ public class AutoTopRedMark extends LinearOpMode {
 
     private AutonomusDriveCommand autonomusDriveCommand;
     private EncoderDriveCommand encoderDriveCommand;
+    private TurnDriveCommand turnDriveCommand;
 
     private float[] teamPropDimensions;
     private int desiredID;
@@ -38,12 +40,13 @@ public class AutoTopRedMark extends LinearOpMode {
 
         encoderDriveCommand = new EncoderDriveCommand(mecanumSubsystem);
         autonomusDriveCommand = new AutonomusDriveCommand(mecanumSubsystem, aprilTagsVisionSubsystem);
+        turnDriveCommand = new TurnDriveCommand(mecanumSubsystem);
         waitForStart();
         // Code to run after autonomous starts
 
         /* Backup code for auto */
-//        encoderDriveCommand.encoderDriveOperate(1, "Backwards");
-//        encoderDriveCommand.encoderDriveOperate(8, "Left");
+//        encoderDriveCommand.operate(1, "Backwards");
+//        encoderDriveCommand.operate(40, "Left");
 
 //      Actual comp code, needs to be tested
 
@@ -54,58 +57,58 @@ public class AutoTopRedMark extends LinearOpMode {
             }
         }
 
-        encoderDriveCommand.encoderDriveOperate(8, "Backwards");
-//
+        encoderDriveCommand.operate(8, "Backwards");
+
 //        // Decide which Spike Mark to travel towards
 //        if (teamPropDimensions[3] > Constants.TeamPropConstants.kTeamPropTargetLeftMin || teamPropDimensions[4] < Constants.TeamPropConstants.kTeamPropTargetLeftMax) {
 //            // Left Spike Mark Pathing
 //            desiredID = 1;
 //
 //            // Drive towards Spike Mark & Scoring
-//            encoderDriveCommand.turnDriveOperate(90);
-//            encoderDriveCommand.encoderDriveOperate(6, "Forwards");
+//            turnDriveCommand.operate(-90);
+//            encoderDriveCommand.operate(6, "Forwards");
 //
 //            rollerIntakeSubsystem.autoOperate(this, Constants.RollerIntakeConstants.kRollerAutoSpeed, Constants.RollerIntakeConstants.kRollerDistance, "Score");
 //
-//            encoderDriveCommand.encoderDriveOperate(6, "Backwards");
-//            encoderDriveCommand.turnDriveOperate(-90);
+//            encoderDriveCommand.operate(6, "Backwards");
+//            turnDriveCommand.operate(90);
 //        }
 //        else if (teamPropDimensions[0] > Constants.TeamPropConstants.kTeamPropTargetLengthMin || teamPropDimensions[0] < Constants.TeamPropConstants.kTeamPropTargetLengthMax) {
 //            // Middle Spike Mark Pathing
 //            desiredID = 2;
 //
 //            // Spike Mark Scoring
-//            encoderDriveCommand.turnDriveOperate(-90);
+//            turnDriveCommand.operate(90);
 //
 //            rollerIntakeSubsystem.autoOperate(this, Constants.RollerIntakeConstants.kRollerAutoSpeed, Constants.RollerIntakeConstants.kRollerDistance, "Score");
 //
-//            encoderDriveCommand.turnDriveOperate(90);
+//            turnDriveCommand.operate(-90);
 //        }
 //        else if (teamPropDimensions[4] > Constants.TeamPropConstants.kTeamPropTargetRightMin || teamPropDimensions[4] < Constants.TeamPropConstants.kTeamPropTargetRightMax) {
 //            // Right Spike Mark Pathing
 //            desiredID = 3;
 //
 //            // Drive towards Spike Mark & Scoring
-//            encoderDriveCommand.turnDriveOperate(-90);
-//            encoderDriveCommand.encoderDriveOperate(6, "Forwards");
+//            turnDriveCommand.operate(90);
+//            encoderDriveCommand.operate(6, "Forwards");
 //
 //            rollerIntakeSubsystem.autoOperate(this, Constants.RollerIntakeConstants.kRollerAutoSpeed, Constants.RollerIntakeConstants.kRollerDistance, "Score");
 //
-//            encoderDriveCommand.encoderDriveOperate(6, "Backwards");
-//            encoderDriveCommand.turnDriveOperate(90);
+//            encoderDriveCommand.operate(6, "Backwards");
+//            turnDriveCommand.operate(-90);
 //        }
 //        else {
 //            // Emergency parking path.
-//            encoderDriveCommand.encoderDriveOperate(48, "Left");
+//            encoderDriveCommand.operate(48, "Left");
 //            stop();
 //        }
-
-//        // Drive towards Backdrop
-//        encoderDriveCommand.encoderDriveOperate(26, "Forwards");
-//        encoderDriveCommand.encoderDriveOperate(24, "Left");
-//        encoderDriveCommand.encoderDriveOperate(24, "Backwards");
 //
-//        encoderDriveCommand.turnDriveOperate(-90);
+//        // Drive towards Backdrop
+//        encoderDriveCommand.operate(26, "Forwards");
+//        encoderDriveCommand.operate(24, "Left");
+//        encoderDriveCommand.operate(24, "Backwards");
+//
+//        turnDriveCommand.operate(-90);
 //
 //        // Aligning and moving towards Backdrop AprilTags
 //        autonomusDriveCommand.aprilTagAlignment(this, desiredID);
@@ -117,7 +120,7 @@ public class AutoTopRedMark extends LinearOpMode {
 //        cascadeLiftSubsystem.autoOperate(this, Constants.CascadeLiftConstants.kLiftAutoPower, Constants.CascadeLiftConstants.kAutoHeight, "Down");
 //
 //        // Move into parking
-//        encoderDriveCommand.encoderDriveOperate(16, "Left");
+//        encoderDriveCommand.operate(16, "Left");
 
         // Shutdown
         mecanumSubsystem.shutdown();
