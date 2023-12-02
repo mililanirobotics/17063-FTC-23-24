@@ -11,6 +11,8 @@ import org.firstinspires.ftc.teamcode.subsystems.MecanumSubsystem;
 public class EncoderDriveCommand {
     MecanumSubsystem m_MecanumSubsystem;
     PIDController encoderPID;
+    int motorTarget;
+    double powerOutput;
 
     public EncoderDriveCommand (MecanumSubsystem mecanumSubsystem) {
         m_MecanumSubsystem = mecanumSubsystem;
@@ -19,9 +21,7 @@ public class EncoderDriveCommand {
 
     // Runs the mecanum drive to reach target encoder positions
     public void operate (double distance, String direction) {
-        int motorTarget = (int)(distance * Constants.EncoderDriveConstants.kCOUNTS_PER_INCH);
-        double powerOutput;
-
+        motorTarget = m_MecanumSubsystem.encoderCountsTarget(distance);
         m_MecanumSubsystem.setEncoderTarget(motorTarget, direction);
 
         while (m_MecanumSubsystem.isBusyCheck() == true) {

@@ -90,6 +90,11 @@ public class MecanumSubsystem {
         return encoderReading;
     }
 
+    // Converts the distance target from inches to counts
+    public int encoderCountsTarget(double distance) {
+        return (int)(distance * Constants.EncoderDriveConstants.kCOUNTS_PER_INCH);
+    }
+
     // Sets the counts target for encoders including directional targets.
     public void setEncoderTarget (int targetCounts, String direction) {
         leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -150,12 +155,12 @@ public class MecanumSubsystem {
 
     // A check statement for waiting until the drive motors stop moving.
     public boolean isBusyCheck() {
-        boolean isBusy = true;
-        if (leftFrontDrive.isBusy() == true || rightFrontDrive.isBusy() == true || leftBackDrive.isBusy() == true || rightBackDrive.isBusy() == true) {
-
+        boolean isBusy;
+        if (leftFrontDrive.isBusy() != true || rightFrontDrive.isBusy() != true || leftBackDrive.isBusy() != true || rightBackDrive.isBusy() != true) {
+            isBusy = false;
         }
         else {
-            isBusy = false;
+            isBusy = true;
         }
         return isBusy;
     }

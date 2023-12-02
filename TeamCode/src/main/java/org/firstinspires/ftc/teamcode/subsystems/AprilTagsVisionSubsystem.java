@@ -82,7 +82,7 @@ public class AprilTagsVisionSubsystem {
         return currentDetections;
     }
 
-    // Active method for
+    // Active method for grabbing data of Apriltag Image
     public double[] getAprilTagDistance(LinearOpMode linearOpMode, int ID, ElapsedTime elapsedTime, int timeoutSec, Telemetry telemetry) {
         AprilTagDetection detection;
         double[] position = new double[3];

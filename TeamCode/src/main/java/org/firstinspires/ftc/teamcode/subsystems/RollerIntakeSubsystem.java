@@ -21,10 +21,10 @@ public class RollerIntakeSubsystem {
 
     public void operate(Gamepad gamepad) {
         if (gamepad.left_trigger > Constants.RollerIntakeConstants.kDeadband) {
-            rollerIntakeMotor.setPower(gamepad.left_trigger * 0.2);
+            rollerIntakeMotor.setPower(-gamepad.left_trigger);
         }
         else if (gamepad.right_trigger > Constants.RollerIntakeConstants.kDeadband) {
-            rollerIntakeMotor.setPower(gamepad.right_trigger * 0.2);
+            rollerIntakeMotor.setPower(gamepad.right_trigger);
         }
         else {
             rollerIntakeMotor.setPower(0);
